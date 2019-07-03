@@ -9,20 +9,19 @@ from ply.yacc import yacc
 
 if __name__ == "__main__":
 
-    text = 'type menem struct { nombre string }'
+    text = 'type menem struct { nombre sida } type sida struct { asd int }'
 
     lexer = lex(module=lexer_rules)
     parser = yacc(module=parser_rules)
 
     expression = parser.parse(text, lexer)
-
     result = expression.evaluate()
     
     print(result)
-    #lexer.input(data)
+    # lexer.input(text)
 
-    #while True:
-    #    tok = lexer.token()
-    #    if not tok:
-    #        break      # No more input
-    #    print(tok)
+    # while True:
+    #     tok = lexer.token()
+    #     if not tok:
+    #         break      # No more input
+    #     print(tok)

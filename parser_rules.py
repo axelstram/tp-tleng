@@ -1,29 +1,39 @@
 from lexer_rules import tokens
 from expressions import *
 
-# S -> type id struct { M }
-def p_type_id_struct_lbrck_m_rbrck(p):
-	's : TYPE n STRUCT L_BRCK m R_BRCK'
-	p[0] = Struct(p[2], p[5])
-
-# N -> id
-def p_name(p):
-	'n : ID'
+# I -> S | lambda
+def p_inicial(p):
+	'i : s'
+	'  | lambda'
 	p[0] = p[1]
 
-# M -> M M
-def p_expr_expr(p):
-	'm : m m'
+def p_inicial_dos(p):
+	'i : s i'
 	p[0] = Tuple(p[1], p[2])
 
+# lambda
+def p_lambda(p):
+	'lambda :'
+	pass
 
-#def p_lambda(p):
-#	'm : '
-#	p[0] = None
+# S -> type id struct { E }
+def p_type_id_struct_lbrck_m_rbrck(p):
+	's : TYPE v STRUCT L_BRCK e R_BRCK'
+	p[0] = Struct(p[2], p[5])
 
-# M -> N T
+# V -> id
+def p_name(p):
+	'v : ID'
+	p[0] = Var(p[1])
+
+# E -> E E
+def p_expr_expr(p):
+	'e : e e'
+	p[0] = Tuple(p[1], p[2])
+
+# E -> V T
 def p_expr_to_term_and_type(p):
-	'm : n t'
+	'e : v t'
 	p[0] = Tuple(p[1], p[2])
 
 # T -> type
@@ -31,8 +41,9 @@ def p_type_string(p):
 	'''t : STRING 
 	| INT
 	| BOOL
-	| FLOAT'''
-	p[0] = p[1].lower()
+	| FLOAT
+	| ID'''
+	p[0] = Type(p[1])
 
 
 
