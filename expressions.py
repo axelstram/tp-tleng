@@ -9,14 +9,18 @@ class Type(object):
 
 class Array(object):
 	def __init__(self, t):
-		self.type = t.type
-
-		if self.type == 'int':
+		self.type = "array"
+		
+		if t.type == 'int':
 			self.l = random.sample(range(1,100), random.sample(range(1,5),1)[0])
-		elif self.type == 'float':
+		elif t.type == 'float':
 			self.l = [round(random.random(), 2) for i in range(random.sample(range(1,5),1)[0])]
-		elif self.type == 'bool':
+		elif t.type == 'bool':
 			self.l = [bool(random.getrandbits(1)) for i in range(random.sample(range(1,5),1)[0])]
+		elif t.type == 'array':
+			self.l = [t.l, t.l]
+		elif t.type == 'struct':
+			self.l = t.evaluate()
 		else:
 			self.l = ['carlos', 'saul', 'I']
 

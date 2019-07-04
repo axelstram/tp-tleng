@@ -9,7 +9,8 @@ from ply.yacc import yacc
 
 if __name__ == "__main__":
 
-    text = 'type menem struct { nombre []string } type sida struct { asd int }'
+    # text = 'type menem struct { nombre []string } type sida struct { asd int }'
+    text = 'type menem struct { sarasa struct { nombre [][]sida} } } type sida struct { asd int } '
 
     lexer = lex(module=lexer_rules)
     parser = yacc(module=parser_rules)

@@ -36,6 +36,12 @@ def p_expr_to_term_and_type(p):
 	'e : v t'
 	p[0] = Tuple(p[1], p[2])
 
+# E -> Q
+def p_expr_to_struct(p):
+	'e : q'
+	p[0] = p[1]
+
+# T -> string | int | bool | float | V
 def p_basic_types(p):
 	'''t : STRING 
 	| INT
@@ -44,13 +50,15 @@ def p_basic_types(p):
 	| ID'''
 	p[0] = Type(p[1])
 
+# T -> []T
 def p_array_type(p):
 	't : L_SQUARE_BRCK R_SQUARE_BRCK t'
 	p[0] = Array(p[3])
 
+# Q -> id struct { E }
 def p_embedded_struct(p):
-	't : STRUCT v L_BRCK e R_BRCK'
-	p[0] = Struct(p[2], p[4])
+	'q : v STRUCT L_BRCK e R_BRCK'
+	p[0] = Struct(p[1], p[4])
 
 def p_error(token):
     message = '[Syntax error]'
