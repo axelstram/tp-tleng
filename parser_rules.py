@@ -36,8 +36,7 @@ def p_expr_to_term_and_type(p):
 	'e : v t'
 	p[0] = Tuple(p[1], p[2])
 
-# T -> type
-def p_type_string(p):
+def p_basic_types(p):
 	'''t : STRING 
 	| INT
 	| BOOL
@@ -45,7 +44,13 @@ def p_type_string(p):
 	| ID'''
 	p[0] = Type(p[1])
 
+def p_array_type(p):
+	't : L_SQUARE_BRCK R_SQUARE_BRCK t'
+	p[0] = Array(p[3])
 
+def p_embedded_struct(p):
+	't : STRUCT v L_BRCK e R_BRCK'
+	p[0] = Struct(p[2], p[4])
 
 def p_error(token):
     message = '[Syntax error]'

@@ -1,9 +1,27 @@
+import random
+
 class Type(object):
 	def __init__(self, t):
 		self.type = t.lower()
 
 	def evaluate(self):
 		return self.type
+
+class Array(object):
+	def __init__(self, t):
+		self.type = t.type
+
+		if self.type == 'int':
+			self.l = random.sample(range(1,100), random.sample(range(1,5),1)[0])
+		elif self.type == 'float':
+			self.l = [round(random.random(), 2) for i in range(random.sample(range(1,5),1)[0])]
+		elif self.type == 'bool':
+			self.l = [bool(random.getrandbits(1)) for i in range(random.sample(range(1,5),1)[0])]
+		else:
+			self.l = ['carlos', 'saul', 'I']
+
+	def evaluate(self):
+		return '[' + ' '.join(str(e) for e in self.l) + ']'
 
 class Var(object):
 	def __init__(self, t):

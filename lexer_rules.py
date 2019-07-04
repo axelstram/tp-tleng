@@ -3,7 +3,7 @@ def t_error(t):
      t.lexer.skip(1)
 
 def t_ID(t):
-    r'\[]|[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
     if t.value in reserved_words.keys():
     	t.type = reserved_words.get(t.value)
     	t.value = reserved_words.get(t.value)
