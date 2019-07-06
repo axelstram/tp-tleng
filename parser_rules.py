@@ -1,24 +1,29 @@
 from lexer_rules import tokens
 from expressions import *
 
-# I -> S | lambda
+# I -> J
 def p_inicial(p):
-	'i : s'
-	'  | lambda'
-	p[0] = p[1]
+	'i : s j'
+	p[0] = Main(p[1], p[2])
 
-def p_inicial_dos(p):
-	'i : s i'
-	p[0] = Tuple(p[1], p[2])
+# J -> S
+def p_single_struct(p):
+	'j : s'
+	p[0] = StructList(p[1])
 
-# lambda
+# J -> S J
+def p_multiple_structs(p):
+	'j : s j'
+	p[0] = StructList(p[1], p[2])
+
+# J -> lambda
 def p_lambda(p):
-	'lambda :'
+	'j :'
 	pass
 
 # S -> type id struct { E }
 def p_type_id_struct_lbrck_m_rbrck(p):
-	's : TYPE v STRUCT L_BRCK e R_BRCK'
+	's : TYPE t STRUCT L_BRCK e R_BRCK'
 	p[0] = Struct(p[2], p[5])
 
 # V -> id
@@ -34,12 +39,7 @@ def p_expr_expr(p):
 # E -> V T
 def p_expr_to_term_and_type(p):
 	'e : v t'
-	p[0] = Tuple(p[1], p[2])
-
-# E -> Q
-def p_expr_to_struct(p):
-	'e : q'
-	p[0] = p[1]
+	p[0] = VarAndType(p[1], p[2])
 
 # T -> string | int | bool | float | V
 def p_basic_types(p):
@@ -57,8 +57,11 @@ def p_array_type(p):
 
 # Q -> id struct { E }
 def p_embedded_struct(p):
-	'q : v STRUCT L_BRCK e R_BRCK'
-	p[0] = Struct(p[1], p[4])
+	't : STRUCT L_BRCK e R_BRCK'
+	p[0] = EmbeddedStruct(p[3])
+
+
+
 
 def p_error(token):
     message = '[Syntax error]'

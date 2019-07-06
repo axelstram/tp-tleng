@@ -8,17 +8,6 @@ def t_ID(t):
     	t.type = reserved_words.get(t.value)
     	t.value = reserved_words.get(t.value)
     return t
-    
-#digit            = r'([0-9])'
-#nondigit         = r'([_A-Za-z])'
-#identifier       = r'(' + nondigit + r'(' + digit + r'|' + nondigit + r')*)'
-
-#@TOKEN(identifier)
-#def t_STRUCT_NAME(t):
-#	t.type = 'STRUCT_NAME'
-#	return t
-
-
 
 reserved_words = {
 	'type':      'TYPE',
@@ -32,8 +21,6 @@ reserved_words = {
 
 tokens = ['L_BRCK', 'R_BRCK', 'L_SQUARE_BRCK', 'R_SQUARE_BRCK', 'ID'] + list(reserved_words.values())
 
-
-# Regular expression rules for simple tokens
 t_L_BRCK = r'{'
 t_R_BRCK = r'}'
 t_L_SQUARE_BRCK = r'\['
