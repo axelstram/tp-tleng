@@ -15,8 +15,7 @@ reserved_words = {
 	'string':    'STRING',
 	'int':       'INT',
 	'float64':   'FLOAT',
-	'bool':      'BOOL',
-	'[]':        'ARRAY'
+	'bool':      'BOOL'
 }
 
 tokens = ['L_BRCK', 'R_BRCK', 'L_SQUARE_BRCK', 'R_SQUARE_BRCK', 'ID'] + list(reserved_words.values())

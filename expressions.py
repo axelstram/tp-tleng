@@ -1,9 +1,5 @@
 import random
-import string 
-
-def randomString(stringLength=5):
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(stringLength))
+import generadorDatos as gd
 
 class Type(object):
 	def __init__(self, t):
@@ -12,13 +8,13 @@ class Type(object):
 
 	def evaluate(self):
 		if self.type == 'string':
-			return '\"' +  randomString() + '\"'
+			return gd.generarString()
 		if self.type == 'int':
-			return random.sample(range(1,100),1)[0]
+			return gd.generarInt()
 		if self.type == 'float':
-			return round(random.uniform(1,100), 2)
+			return gd.generarFloat()
 		if self.type == 'bool':
-			return bool(random.getrandbits(1))
+			return gd.generarBool()
 		else:
 			if self.dependencies is not None:
 
@@ -46,7 +42,6 @@ class Array(object):
 		for i in range(size):
 			values.append(self.elementType.evaluate())
 
-		# return str(values)
 		return '[' + ', '.join(str(e) for e in values) + ']'
 
 	def setDependencies(self, all_other_structs):

@@ -1,17 +1,12 @@
 from lexer_rules import tokens
 from expressions import *
 
-# I -> J
+# I -> S J
 def p_inicial(p):
 	'i : s j'
 	p[0] = Main(p[1], p[2])
 
-# J -> S
-def p_single_struct(p):
-	'j : s'
-	p[0] = StructList(p[1])
-
-# J -> S J
+# J -> S J 
 def p_multiple_structs(p):
 	'j : s j'
 	p[0] = StructList(p[1], p[2])
@@ -21,9 +16,9 @@ def p_lambda(p):
 	'j :'
 	pass
 
-# S -> type id struct { E }
+# S -> type V struct { E }
 def p_type_id_struct_lbrck_m_rbrck(p):
-	's : TYPE t STRUCT L_BRCK e R_BRCK'
+	's : TYPE v STRUCT L_BRCK e R_BRCK'
 	p[0] = Struct(p[2], p[5])
 
 # V -> id
@@ -41,13 +36,13 @@ def p_expr_to_term_and_type(p):
 	'e : v t'
 	p[0] = VarAndType(p[1], p[2])
 
-# T -> string | int | bool | float | V
+# T -> string | int | bool | float | v
 def p_basic_types(p):
 	'''t : STRING 
 	| INT
 	| BOOL
 	| FLOAT
-	| ID'''
+	| v'''
 	p[0] = Type(p[1])
 
 # T -> []T
@@ -55,7 +50,7 @@ def p_array_type(p):
 	't : L_SQUARE_BRCK R_SQUARE_BRCK t'
 	p[0] = Array(p[3])
 
-# Q -> id struct { E }
+# T -> struct { E }
 def p_embedded_struct(p):
 	't : STRUCT L_BRCK e R_BRCK'
 	p[0] = EmbeddedStruct(p[3])
