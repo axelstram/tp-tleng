@@ -36,7 +36,7 @@ class Main(object):
 
 	def create_dependencies_graph(self):
 		for struct in self.p[1]:
-			print('struct: ' + str(struct))
+			#print('struct: ' + str(struct))
 
 			basicTypes = ['STRING', 'INT', 'FLOAT', 'BOOL']
 			elements = struct['structBody']
@@ -50,7 +50,7 @@ class Main(object):
 
 			self.dependencies[struct['id']] = dependencies
 
-		print('dependencies: ' + str(self.dependencies))
+		#print('dependencies: ' + str(self.dependencies))
 
 	def getElemType(self, elem):
 		#si es un arreglo o arreglo de arreglos, va iterando hasta el final
@@ -65,6 +65,9 @@ class Main(object):
 	def evaluate(self):
 		self.create_dependencies_graph()
 
+		if self.has_undefined_dependencies():
+			raise Exception('Se estan usando tipos no definidos')
+
 		if self.has_circular_dependencies():
 			raise Exception('Hay dependencias circulares')
 
@@ -77,12 +80,12 @@ class Main(object):
 	                                         
 		for u in G:                          
 		    if color[u] == "white":
-		        self._dfs_visit(G, u, color, found_cycle)
+		        self.dfs_visit(G, u, color, found_cycle)
 		    if found_cycle[0]:
 		        break
 		return found_cycle[0]
 	 
-	def _dfs_visit(self, G, u, color, found_cycle):
+	def dfs_visit(self, G, u, color, found_cycle):
 	    if found_cycle[0]:                          
 	        return
 	    color[u] = "gray"                           
@@ -92,6 +95,14 @@ class Main(object):
 	            found_cycle[0] = True       
 	            return
 	        if color[v] == "white":                 
-	            self._dfs_visit(G, v, color, found_cycle)
-	    color[u] = "black"                          
+	            self.dfs_visit(G, v, color, found_cycle)
+	    color[u] = "black"
+
+	def has_undefined_dependencies(self):
+		for dependencies in self.dependencies.values():
+			for dependency in dependencies:
+				if (dependency not in self.dependencies.keys()):
+					return True
+
+		return False
 
