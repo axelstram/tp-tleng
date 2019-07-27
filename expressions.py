@@ -1,32 +1,32 @@
 import random
 import generadorDatos as gd
 
-class Type(object):
-	def __init__(self, t):
-		self.type = t.lower()
-		self.dependencies = None
+# class Type(object):
+# 	def __init__(self, t):
+# 		self.type = t.lower()
+# 		self.dependencies = None
 
-	def evaluate(self):
-		if self.type == 'string':
-			return gd.generarString()
-		if self.type == 'int':
-			return gd.generarInt()
-		if self.type == 'float':
-			return gd.generarFloat()
-		if self.type == 'bool':
-			return gd.generarBool()
-		else:
-			if self.dependencies is not None:
+# 	def evaluate(self):
+# 		if self.type == 'string':
+# 			return gd.generarString()
+# 		if self.type == 'int':
+# 			return gd.generarInt()
+# 		if self.type == 'float':
+# 			return gd.generarFloat()
+# 		if self.type == 'bool':
+# 			return gd.generarBool()
+# 		else:
+# 			if self.dependencies is not None:
 
-				for struct in self.dependencies:
-					if struct.getType().type == self.type:
-		 			 	return struct.evaluate()
+# 				for struct in self.dependencies:
+# 					if struct.getType().type == self.type:
+# 		 			 	return struct.evaluate()
 
-	def get(self):
-		return self.type
+# 	def get(self):
+# 		return self.type
 
-	def setDependencies(self, all_other_structs):
-		self.dependencies = all_other_structs
+# 	def setDependencies(self, all_other_structs):
+# 		self.dependencies = all_other_structs
 
 # class Array(object):
 # 	def __init__(self, p):
