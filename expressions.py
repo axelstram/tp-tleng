@@ -1,89 +1,6 @@
 import random
 import generadorDatos as gd
-
-# class Type(object):
-# 	def __init__(self, t):
-# 		self.type = t.lower()
-# 		self.dependencies = None
-
-# 	def evaluate(self):
-# 		if self.type == 'string':
-# 			return gd.generarString()
-# 		if self.type == 'int':
-# 			return gd.generarInt()
-# 		if self.type == 'float':
-# 			return gd.generarFloat()
-# 		if self.type == 'bool':
-# 			return gd.generarBool()
-# 		else:
-# 			if self.dependencies is not None:
-
-# 				for struct in self.dependencies:
-# 					if struct.getType().type == self.type:
-# 		 			 	return struct.evaluate()
-
-# 	def get(self):
-# 		return self.type
-
-# 	def setDependencies(self, all_other_structs):
-# 		self.dependencies = all_other_structs
-
-# class Array(object):
-# 	def __init__(self, p):
-# 		self.p = (1, p)
-
-# 	def evaluate(self):
-# 		return self.p
-	# def evaluate(self):
-	# 	self.elementType.setDependencies(self.dependencies)
-
-	# 	values = []
-	# 	size = random.sample(range(1,5),1)[0]
-	# 	for i in range(size):
-	# 		values.append(self.elementType.evaluate())
-
-	# 	return '[' + ', '.join(str(e) for e in values) + ']'
-
-# 	def setDependencies(self, all_other_structs):
-# 		self.dependencies = all_other_structs
-
-# class Var(object):
-# 	def __init__(self, name):
-# 		self.name = name.lower()
-
-# 	def evaluate(self):
-# 		return str(self.name)
-
-# class Tuple(object):
-# 	def __init__(self, left, right):
-# 		self.left = left
-# 		self.right = right
-# 		self.dependencies = None
-
-# 	def evaluate(self):
-# 		left_evaluation = self.left.evaluate()
-# 		right_evaluation = self.right.evaluate()
-		
-# 		return str(left_evaluation) + ',\n' + str(right_evaluation)
-
-# 	def setDependencies(self, all_other_structs):
-# 		self.dependencies = all_other_structs
-# 		self.left.setDependencies(self.dependencies)
-# 		self.right.setDependencies(self.dependencies)
-
-# class VarAndType(object):
-# 	def __init__(self, var, t):
-# 		self.var = var
-# 		self.type = t
-
-# 	def evaluate(self):
-# 		left_evaluation = self.var.evaluate()
-# 		right_evaluation = self.type.evaluate()
-		
-# 		return "\"" + str(left_evaluation) + "\"" + ": " + str(right_evaluation)
-
-# 	def setDependencies(self, all_other_structs):
-# 		self.type.setDependencies(all_other_structs)
+import lexer_rules
 
 class Struct(object):
 	def __init__(self, p):
@@ -91,27 +8,10 @@ class Struct(object):
 		self.body = p[3]
 
 	def evaluate(self):
-		#return '{ ' + self.expression.evaluate() + ' }'
 		d = {}
 		d['id'] = self.id
 		d['structBody'] = self.body
 		return d
-	# def getType(self):
-	# 	return self.type
-
-	# def setDependencies(self, all_other_structs):
-	# 	self.expression.setDependencies(all_other_structs)
-
-# class EmbeddedStruct(object):
-# 	def __init__(self, expression):
-# 		self.type = "struct"
-# 		self.expression = expression
-
-# 	def evaluate(self):
-# 		return '{ ' + self.expression.evaluate() + ' }'
-
-# 	def setDependencies(self, all_other_structs):
-# 		self.expression.setDependencies(all_other_structs)
 
 class StructList(object):
 	def __init__(self, p):
@@ -123,23 +23,11 @@ class StructList(object):
 
 	def evaluate(self):
 		if self.rest is not None:
-			return [self.struct] + [self.rest]
+			#print('self.struct' + str(type(self.struct)))
+			#print('self.struct' + str(type(self.struct)))
+			return [self.struct] + self.rest
 		elif self.struct is not None:
 			return [self.struct]
-		# #otro caso base
-		# if not self.right:
-		# 	return [self.left]
-		# elif type(self.right) == Struct:
-		# 	#caso base
-		# 	return [self.left, self.right]
-		# else:
-		# 	#MultiStructs
-		# 	l = self.right.evaluate()
-		# 	l.append(self.left)
-		# 	return l
-
-	# def get(self):
-	# 	return self.left_struct
 
 class Main(object):
 	def __init__(self, p):
@@ -147,10 +35,35 @@ class Main(object):
 		self.dependencies = {}
 
 	def create_dependencies_graph(self):
-		pass
+		for struct in self.p[1]:
+			print('struct: ' + str(struct))
+
+			basicTypes = ['STRING', 'INT', 'FLOAT', 'BOOL']
+			elements = struct['structBody']
+			dependencies = []
+			for elem in elements:
+				#cada elem es una tupla (id, dict con el type)
+				elemType = self.getElemType(elem[1])
+				if elemType not in basicTypes:
+					# print('elemtype: ' + str(elemType))
+					dependencies.append(elemType)
+
+			self.dependencies[struct['id']] = dependencies
+
+		print('dependencies: ' + str(self.dependencies))
+
+	def getElemType(self, elem):
+		#si es un arreglo o arreglo de arreglos, va iterando hasta el final
+		#para encontrar el tipo
+		while elem['is_array'] == True:
+			elem = elem['type']
+
+		elemType = elem['type']
+
+		return elemType
 
 	def has_circular_dependencies(self):
-		return False
+		return self._cycle_exists(self.dependencies)
 
 	def evaluate(self):
 		self.create_dependencies_graph()
@@ -160,16 +73,27 @@ class Main(object):
 
 		return self.p[1]
 
-	# def evaluate(self):
-	# 	if type(self.all_structs) is StructList:
-	# 		all_structs_list = self.all_structs.evaluate()
+	def _cycle_exists(self, G):                     
+	    color = {u : "white" for u in G}  
+	    found_cycle = [False]                
+	                                         
+	    for u in G:                          
+	        if color[u] == "white":
+	            self._dfs_visit(G, u, color, found_cycle)
+	        if found_cycle[0]:
+	            break
+	    return found_cycle[0]
+	 
+	def _dfs_visit(self, G, u, color, found_cycle):
+	    if found_cycle[0]:                          
+	        return
+	    color[u] = "gray"                           
 
-	# 		for i in range(len(all_structs_list)):
-	# 			struct = all_structs_list[i]
-	# 			all_structs_except_current = all_structs_list[:i] + all_structs_list[i+1:]
+	    for v in G[u]:                              
+	        if color[v] == "gray":                  
+	            found_cycle[0] = True       
+	            return
+	        if color[v] == "white":                 
+	            self._dfs_visit(G, v, color, found_cycle)
+	    color[u] = "black"                          
 
-	# 			struct.setDependencies(all_structs_except_current)
-
-	# 		self.mainStruct.setDependencies(all_structs_list)
-
-	# 	return self.mainStruct.evaluate()

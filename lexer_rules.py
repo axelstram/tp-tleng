@@ -25,4 +25,4 @@ t_R_BRCK = r'}'
 t_L_SQUARE_BRCK = r'\['
 t_R_SQUARE_BRCK = r']'
 
-t_ignore  = '\n\t'
+t_ignore  = '\n\t '

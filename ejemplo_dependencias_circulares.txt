@@ -1,0 +1,1 @@
+type s1 struct { nombre string sarasa s2 sarasa2 s3 } type s2 struct { numeritos []int } type s3 struct { edad int otro s1 }

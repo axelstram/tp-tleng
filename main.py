@@ -21,4 +21,5 @@ if __name__ == "__main__":
     result = expression.evaluate()
     pp = pprint.PrettyPrinter(indent=1)
 
+    print('-------------------')
     pp.pprint(result)
