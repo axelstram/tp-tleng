@@ -1,7 +1,8 @@
 import lexer_rules
 import parser_rules
+import parser_rules2
 import json
-from pprint import pprint
+import pprint
 
 import sys
 
@@ -14,9 +15,10 @@ if __name__ == "__main__":
     text = str(sys.stdin.readlines()[0])
 
     lexer = lex(module=lexer_rules)
-    parser = yacc(module=parser_rules)
+    parser = yacc(module=parser_rules2)
 
     expression = parser.parse(text, lexer)
     result = expression.evaluate()
-    
-    print(result)
+    pp = pprint.PrettyPrinter(indent=1)
+
+    pp.pprint(result)

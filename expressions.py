@@ -28,124 +28,148 @@ class Type(object):
 	def setDependencies(self, all_other_structs):
 		self.dependencies = all_other_structs
 
-class Array(object):
-	def __init__(self, t):
-		self.type = "array"
-		self.elementType = t
-		self.dependencies = None
+# class Array(object):
+# 	def __init__(self, p):
+# 		self.p = (1, p)
 
-	def evaluate(self):
-		self.elementType.setDependencies(self.dependencies)
+# 	def evaluate(self):
+# 		return self.p
+	# def evaluate(self):
+	# 	self.elementType.setDependencies(self.dependencies)
 
-		values = []
-		size = random.sample(range(1,5),1)[0]
-		for i in range(size):
-			values.append(self.elementType.evaluate())
+	# 	values = []
+	# 	size = random.sample(range(1,5),1)[0]
+	# 	for i in range(size):
+	# 		values.append(self.elementType.evaluate())
 
-		return '[' + ', '.join(str(e) for e in values) + ']'
+	# 	return '[' + ', '.join(str(e) for e in values) + ']'
 
-	def setDependencies(self, all_other_structs):
-		self.dependencies = all_other_structs
+# 	def setDependencies(self, all_other_structs):
+# 		self.dependencies = all_other_structs
 
-class Var(object):
-	def __init__(self, name):
-		self.name = name.lower()
+# class Var(object):
+# 	def __init__(self, name):
+# 		self.name = name.lower()
 
-	def evaluate(self):
-		return str(self.name)
+# 	def evaluate(self):
+# 		return str(self.name)
 
-class Tuple(object):
-	def __init__(self, left, right):
-		self.left = left
-		self.right = right
-		self.dependencies = None
+# class Tuple(object):
+# 	def __init__(self, left, right):
+# 		self.left = left
+# 		self.right = right
+# 		self.dependencies = None
 
-	def evaluate(self):
-		left_evaluation = self.left.evaluate()
-		right_evaluation = self.right.evaluate()
+# 	def evaluate(self):
+# 		left_evaluation = self.left.evaluate()
+# 		right_evaluation = self.right.evaluate()
 		
-		return str(left_evaluation) + ',\n' + str(right_evaluation)
+# 		return str(left_evaluation) + ',\n' + str(right_evaluation)
 
-	def setDependencies(self, all_other_structs):
-		self.dependencies = all_other_structs
-		self.left.setDependencies(self.dependencies)
-		self.right.setDependencies(self.dependencies)
+# 	def setDependencies(self, all_other_structs):
+# 		self.dependencies = all_other_structs
+# 		self.left.setDependencies(self.dependencies)
+# 		self.right.setDependencies(self.dependencies)
 
-class VarAndType(object):
-	def __init__(self, var, t):
-		self.var = var
-		self.type = t
+# class VarAndType(object):
+# 	def __init__(self, var, t):
+# 		self.var = var
+# 		self.type = t
 
-	def evaluate(self):
-		left_evaluation = self.var.evaluate()
-		right_evaluation = self.type.evaluate()
+# 	def evaluate(self):
+# 		left_evaluation = self.var.evaluate()
+# 		right_evaluation = self.type.evaluate()
 		
-		return "\"" + str(left_evaluation) + "\"" + ": " + str(right_evaluation)
+# 		return "\"" + str(left_evaluation) + "\"" + ": " + str(right_evaluation)
 
-	def setDependencies(self, all_other_structs):
-		self.type.setDependencies(all_other_structs)
+# 	def setDependencies(self, all_other_structs):
+# 		self.type.setDependencies(all_other_structs)
 
 class Struct(object):
-	def __init__(self, t, expression):
-		self.type = t
-		self.expression = expression
+	def __init__(self, p):
+		self.id = p[2]
+		self.body = p[3]
 
 	def evaluate(self):
-		return '{ ' + self.expression.evaluate() + ' }'
+		#return '{ ' + self.expression.evaluate() + ' }'
+		d = {}
+		d['id'] = self.id
+		d['structBody'] = self.body
+		return d
+	# def getType(self):
+	# 	return self.type
 
-	def getType(self):
-		return self.type
+	# def setDependencies(self, all_other_structs):
+	# 	self.expression.setDependencies(all_other_structs)
 
-	def setDependencies(self, all_other_structs):
-		self.expression.setDependencies(all_other_structs)
+# class EmbeddedStruct(object):
+# 	def __init__(self, expression):
+# 		self.type = "struct"
+# 		self.expression = expression
 
-class EmbeddedStruct(object):
-	def __init__(self, expression):
-		self.type = "struct"
-		self.expression = expression
+# 	def evaluate(self):
+# 		return '{ ' + self.expression.evaluate() + ' }'
 
-	def evaluate(self):
-		return '{ ' + self.expression.evaluate() + ' }'
-
-	def setDependencies(self, all_other_structs):
-		self.expression.setDependencies(all_other_structs)
+# 	def setDependencies(self, all_other_structs):
+# 		self.expression.setDependencies(all_other_structs)
 
 class StructList(object):
-	def __init__(self, left, right=None):
-		self.left = left
-		self.right = right
+	def __init__(self, p):
+		self.struct = p[1]
+		self.rest = None
+
+		if len(p) > 2:
+			self.rest = p[2]
 
 	def evaluate(self):
-		#otro caso base
-		if not self.right:
-			return [self.left]
-		elif type(self.right) == Struct:
-			#caso base
-			return [self.left, self.right]
-		else:
-			#MultiStructs
-			l = self.right.evaluate()
-			l.append(self.left)
-			return l
+		if self.rest is not None:
+			return [self.struct] + [self.rest]
+		elif self.struct is not None:
+			return [self.struct]
+		# #otro caso base
+		# if not self.right:
+		# 	return [self.left]
+		# elif type(self.right) == Struct:
+		# 	#caso base
+		# 	return [self.left, self.right]
+		# else:
+		# 	#MultiStructs
+		# 	l = self.right.evaluate()
+		# 	l.append(self.left)
+		# 	return l
 
-	def get(self):
-		return self.left_struct
+	# def get(self):
+	# 	return self.left_struct
 
 class Main(object):
-	def __init__(self, mainStruct, s):
-		self.mainStruct = mainStruct
-		self.all_structs = s
+	def __init__(self, p):
+		self.p = p
+		self.dependencies = {}
+
+	def create_dependencies_graph(self):
+		pass
+
+	def has_circular_dependencies(self):
+		return False
 
 	def evaluate(self):
-		if type(self.all_structs) is StructList:
-			all_structs_list = self.all_structs.evaluate()
+		self.create_dependencies_graph()
 
-			for i in range(len(all_structs_list)):
-				struct = all_structs_list[i]
-				all_structs_except_current = all_structs_list[:i] + all_structs_list[i+1:]
+		if self.has_circular_dependencies():
+			raise Exception('Hay dependencias circulares')
 
-				struct.setDependencies(all_structs_except_current)
+		return self.p[1]
 
-			self.mainStruct.setDependencies(all_structs_list)
+	# def evaluate(self):
+	# 	if type(self.all_structs) is StructList:
+	# 		all_structs_list = self.all_structs.evaluate()
 
-		return self.mainStruct.evaluate()
+	# 		for i in range(len(all_structs_list)):
+	# 			struct = all_structs_list[i]
+	# 			all_structs_except_current = all_structs_list[:i] + all_structs_list[i+1:]
+
+	# 			struct.setDependencies(all_structs_except_current)
+
+	# 		self.mainStruct.setDependencies(all_structs_list)
+
+	# 	return self.mainStruct.evaluate()

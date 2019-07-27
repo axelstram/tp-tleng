@@ -5,6 +5,7 @@ from expressions import *
 def p_inicial(p):
 	'i : s j'
 	p[0] = Main(p[1], p[2])
+	
 
 # J -> S J 
 def p_multiple_structs(p):
