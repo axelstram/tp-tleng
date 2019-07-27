@@ -62,9 +62,6 @@ class Main(object):
 
 		return elemType
 
-	def has_circular_dependencies(self):
-		return self._cycle_exists(self.dependencies)
-
 	def evaluate(self):
 		self.create_dependencies_graph()
 
@@ -73,16 +70,17 @@ class Main(object):
 
 		return self.p[1]
 
-	def _cycle_exists(self, G):                     
-	    color = {u : "white" for u in G}  
-	    found_cycle = [False]                
+	def has_circular_dependencies(self):                     
+		G = self.dependencies
+	   	color = {u : "white" for u in G}  
+		found_cycle = [False]                
 	                                         
-	    for u in G:                          
-	        if color[u] == "white":
-	            self._dfs_visit(G, u, color, found_cycle)
-	        if found_cycle[0]:
-	            break
-	    return found_cycle[0]
+		for u in G:                          
+		    if color[u] == "white":
+		        self._dfs_visit(G, u, color, found_cycle)
+		    if found_cycle[0]:
+		        break
+		return found_cycle[0]
 	 
 	def _dfs_visit(self, G, u, color, found_cycle):
 	    if found_cycle[0]:                          
