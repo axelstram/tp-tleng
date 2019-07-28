@@ -92,9 +92,9 @@ class Main(object):
 
 	def has_circular_dependencies(self):                     
 		G = self.dependencies
-	   	color = {u : "white" for u in G}  
+		color = {u : "white" for u in G}  
 		found_cycle = [False]                
-	                                         
+		                                     
 		for u in G:                          
 		    if color[u] == "white":
 		        self.dfs_visit(G, u, color, found_cycle)

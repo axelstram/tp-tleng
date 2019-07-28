@@ -47,20 +47,20 @@ def p_element(p):
 	p[0] = d
 
 def p_type(p):
-    '''
-    type : L_SQUARE_BRCK R_SQUARE_BRCK type 
-         | basicType
-    '''
-    d = {}
+	'''
+	type : L_SQUARE_BRCK R_SQUARE_BRCK type 
+		| basicType
+	'''
+	d = {}
 
-    if len(p) <= 2:
-        d['is_array'] = False
-        d['type'] = p[1]
-        p[0] = d
-    else:
-    	d['is_array'] = True
-        d['type'] = p[3]
-        p[0] = d
+	if len(p) <= 2:
+		d['is_array'] = False
+		d['type'] = p[1]
+		p[0] = d
+	else:
+		d['is_array'] = True
+		d['type'] = p[3]
+		p[0] = d
 
 def p_basicType(p):
     '''
@@ -80,10 +80,10 @@ def p_empty(p):
     p[0] = None
 
 def p_error(token):
-    message = '[Syntax error]'
-    if token is not None:
-        message += "\ntype:" + token.type
-        message += "\nvalue:" + str(token.value)
-        message += "\nline:" + str(token.lineno)
-        message += "\nposition:" + str(token.lexpos)
+	message = '[Syntax error]'
+	if token is not None:
+		message += "\ntype:" + token.type
+		message += "\nvalue:" + str(token.value)
+		message += "\nline:" + str(token.lineno)
+		message += "\nposition:" + str(token.lexpos)
 	print(message)
