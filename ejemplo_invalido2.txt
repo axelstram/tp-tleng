@@ -1,1 +1,1 @@
-type menem struct { string sarasa s1 }
+typ menem struct { string sarasa s1 }

@@ -11,14 +11,20 @@ from ply.yacc import yacc
 
 if __name__ == "__main__":
 
-    text = str(sys.stdin.readlines()[0])
+	text = str(sys.stdin.readlines()[0])
 
-    lexer = lex(module=lexer_rules)
-    parser = yacc(module=parser_rules)
+	lexer = lex(module=lexer_rules)
+	parser = yacc(module=parser_rules)
 
-    expression = parser.parse(text, lexer)
-    result = expression.evaluate()
-    pp = pprint.PrettyPrinter(indent=1)
+	try:
+		expression = parser.parse(text, lexer)
+		result = expression.evaluate()
 
-    print('-------------------')
-    pp.pprint(result)
+		pp = pprint.PrettyPrinter(indent=1)
+
+		print('-------------------')
+		pp.pprint(result)
+	except BaseException as e:
+		print(e)
+
+	

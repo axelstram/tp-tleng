@@ -1,6 +1,8 @@
 def t_error(t):
-     print("Illegal character '%s'" % t.value[0])
-     t.lexer.skip(1)
+    print('entro')
+    print("Illegal character '%s'" % t.value[0])
+    #t.lexer.skip(1)
+    raise BaseException('Error de lexer')
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
