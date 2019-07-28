@@ -79,7 +79,7 @@ class Main(object):
 		return dependencies
 		
 	def evaluate(self):
-		print('p1: ' + str(self.p[1]))
+		#print('p1: ' + str(self.p[1]))
 		self.create_dependencies_graph()
 
 		if self.has_undefined_dependencies():
