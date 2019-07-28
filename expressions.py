@@ -23,8 +23,6 @@ class StructList(object):
 
 	def evaluate(self):
 		if self.rest is not None:
-			#print('self.struct' + str(type(self.struct)))
-			#print('self.struct' + str(type(self.struct)))
 			return [self.struct] + self.rest
 		elif self.struct is not None:
 			return [self.struct]
@@ -34,13 +32,30 @@ class Main(object):
 		self.p = p
 		self.dependencies = {}
 		self.basicTypes = ['STRING', 'INT', 'FLOAT', 'BOOL']
+		
+	def evaluate(self):
+		self.create_dependencies_graph()
+
+		if self.has_undefined_dependencies():
+			raise Exception('Se estan usando tipos no definidos')
+
+		if self.has_circular_dependencies():
+			raise Exception('Hay dependencias circulares')
+
+		if self.has_duplicated_type_definitions():
+			raise Exception('Hay definiciones de tipos duplicadas')
+
+		if self.has_duplicated_field_definitions():
+			raise Exception('Hay campos duplicados')
+
+		return self.p[1]
 
 	def create_dependencies_graph(self):
 		for struct in self.p[1]:
-			#print('struct: ' + str(struct))
 
 			elements = struct['structBody']
 			dependencies = []
+
 			for elem in elements:
 				#cada elem es un dic con clave id y type (que a su vez es otro dic)
 				elemType = self.get_elem_type(elem['type'])
@@ -52,12 +67,11 @@ class Main(object):
 
 			self.dependencies[struct['id']] = dependencies
 
-		print('dependencies: ' + str(self.dependencies))
+		#print('dependencies: ' + str(self.dependencies))
 
 	def get_elem_type(self, elem):
 		#si es un arreglo o arreglo de arreglos, va iterando hasta el final
 		#para encontrar el tipo
-			
 		while elem['is_array'] == True:
 			elem = elem['type']
 
@@ -75,20 +89,7 @@ class Main(object):
 				if elem not in self.basicTypes:
 					dependencies.append(elem)
 
-		#print('dependencies: ' + str(dependencies))
 		return dependencies
-		
-	def evaluate(self):
-		#print('p1: ' + str(self.p[1]))
-		self.create_dependencies_graph()
-
-		if self.has_undefined_dependencies():
-			raise Exception('Se estan usando tipos no definidos')
-
-		if self.has_circular_dependencies():
-			raise Exception('Hay dependencias circulares')
-
-		return self.p[1]
 
 	def has_circular_dependencies(self):                     
 		G = self.dependencies
@@ -120,6 +121,28 @@ class Main(object):
 			for dependency in dependencies:
 				if (dependency not in self.dependencies.keys()):
 					return True
+
+		return False
+
+	def has_duplicated_type_definitions(self):
+		ids = []
+
+		for struct in self.p[1]:
+			ids.append(struct['id'])
+
+		return len(ids) != len(set(ids))
+
+	def has_duplicated_field_definitions(self):
+		for struct in self.p[1]:
+
+			elements = struct['structBody']
+			fields = []
+
+			for elem in elements:
+				fields.append(elem['id'])
+
+			if len(fields) != len(set(fields)):
+				return True
 
 		return False
 
