@@ -33,28 +33,31 @@ class Main(object):
 	def __init__(self, p):
 		self.p = p
 		self.dependencies = {}
+		self.basicTypes = ['STRING', 'INT', 'FLOAT', 'BOOL']
 
 	def create_dependencies_graph(self):
 		for struct in self.p[1]:
 			#print('struct: ' + str(struct))
 
-			basicTypes = ['STRING', 'INT', 'FLOAT', 'BOOL']
 			elements = struct['structBody']
 			dependencies = []
 			for elem in elements:
-				#cada elem es una tupla (id, dict con el type)
-				elemType = self.getElemType(elem[1])
-				if elemType not in basicTypes:
-					# print('elemtype: ' + str(elemType))
+				#cada elem es un dic con clave id y type (que a su vez es otro dic)
+				elemType = self.get_elem_type(elem['type'])
+
+				if is_struct(elemType):
+					dependencies = self.add_inner_dependencies(dependencies, elemType)
+				elif elemType not in self.basicTypes:
 					dependencies.append(elemType)
 
 			self.dependencies[struct['id']] = dependencies
 
-		#print('dependencies: ' + str(self.dependencies))
+		print('dependencies: ' + str(self.dependencies))
 
-	def getElemType(self, elem):
+	def get_elem_type(self, elem):
 		#si es un arreglo o arreglo de arreglos, va iterando hasta el final
 		#para encontrar el tipo
+			
 		while elem['is_array'] == True:
 			elem = elem['type']
 
@@ -62,7 +65,21 @@ class Main(object):
 
 		return elemType
 
+	def add_inner_dependencies(self, dependencies, elements):
+		for elem in elements:
+			elem = self.get_elem_type(elem['type'])
+
+			if is_struct(elem):
+				dependencies = self.add_inner_dependencies(dependencies, elem)
+			else:
+				if elem not in self.basicTypes:
+					dependencies.append(elem)
+
+		#print('dependencies: ' + str(dependencies))
+		return dependencies
+		
 	def evaluate(self):
+		print('p1: ' + str(self.p[1]))
 		self.create_dependencies_graph()
 
 		if self.has_undefined_dependencies():
@@ -106,3 +123,5 @@ class Main(object):
 
 		return False
 
+def is_struct(e):
+	return isinstance(e, list)
