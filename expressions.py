@@ -48,24 +48,24 @@ class Main(object):
 		if self.has_duplicated_field_definitions():
 			raise Exception('Hay campos duplicados')
 
-		return self.p[1]
+		return self.p[1], self.dependencies
 
 	def create_dependencies_graph(self):
 		for struct in self.p[1]:
 
 			elements = struct['structBody']
-			dependencies = []
+			dependencieList = []
 
 			for elem in elements:
 				#cada elem es un dic con clave id y type (que a su vez es otro dic)
 				elemType = self.get_elem_type(elem['type'])
 
 				if is_struct(elemType):
-					dependencies = self.add_inner_dependencies(dependencies, elemType)
+					dependencieList = self.add_inner_dependencies(dependencieList, elemType)
 				elif elemType not in self.basicTypes:
-					dependencies.append(elemType)
+					dependencieList.append(elemType)
 
-			self.dependencies[struct['id']] = dependencies
+			self.dependencies[struct['id']] = dependencieList
 
 		#print('dependencies: ' + str(self.dependencies))
 

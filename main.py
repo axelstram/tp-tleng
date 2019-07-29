@@ -3,6 +3,8 @@ import parser_rules
 import json
 import pprint
 
+import generadorDatos as gd
+
 import sys
 
 from ply.lex import lex
@@ -18,13 +20,39 @@ if __name__ == "__main__":
 
 	try:
 		expression = parser.parse(text, lexer)
-		result = expression.evaluate()
+		result, dependencies = expression.evaluate()
 
 		pp = pprint.PrettyPrinter(indent=1)
 
 		print('-------------------')
 		pp.pprint(result)
+
+
+		print('-------------------')
+		pp.pprint(dependencies)
+
+		print('-------------------')
+		pp.pprint(caca(result, dependencies))
+
+
+
 	except BaseException as e:
 		print(e)
 
+def caca(result, dependencies):
+	main = result[0]
+	mainAsDict = armarStruct(main['structBody'])
 	
+def armarStruct(camposDelStruct)
+	structAsDict = {}
+	for elem in camposDelStruct:
+		valor = None
+
+		if isArray(elem):
+			valor = 'gordo'
+		elif isStruct(elem):
+			valor = armarStruct()
+		else:
+			valor = gd.generarTipoBasico(elem['type'])
+
+		structAsDict[elem['id']] = valor	
