@@ -32,8 +32,6 @@ def generateBasicType(tipo):
     return value
 
 def generateArray(elem, definitions):
-    dimensions = 0
-
     size = random.randint(1,5)
     res = [generateValue(elem['type'], definitions) for i in range(size)]
 
