@@ -1,1 +1,3 @@
-type menem struct { nombre string sarasa struct { numeritos []int letras string otro struct { mmm []s1 } } } type s1 struct { asd int }
+type menem struct { nombre string sarasa struct { numeritos []int letras string otro struct { mmm []s1 } } } 
+
+type s1 struct { asd int }

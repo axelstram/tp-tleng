@@ -1,9 +1,6 @@
 import lexer_rules
 import parser_rules
-import json
 import pprint
-
-import generadorDatos as gd
 
 import sys
 
@@ -13,46 +10,18 @@ from ply.yacc import yacc
 
 if __name__ == "__main__":
 
-	text = str(sys.stdin.readlines()[0])
+	text = "".join(sys.stdin)
 
 	lexer = lex(module=lexer_rules)
 	parser = yacc(module=parser_rules)
+	pp = pprint.PrettyPrinter(indent=1)
 
 	try:
 		expression = parser.parse(text, lexer)
-		result, dependencies = expression.evaluate()
+		result = expression.convert_to_json()
 
-		pp = pprint.PrettyPrinter(indent=1)
-
-		print('-------------------')
-		pp.pprint(result)
-
-
-		print('-------------------')
-		pp.pprint(dependencies)
-
-		print('-------------------')
-		pp.pprint(caca(result, dependencies))
-
-
+		pp.pprint(expression.convert_to_json())
 
 	except BaseException as e:
 		print(e)
 
-def caca(result, dependencies):
-	main = result[0]
-	mainAsDict = armarStruct(main['structBody'])
-	
-def armarStruct(camposDelStruct)
-	structAsDict = {}
-	for elem in camposDelStruct:
-		valor = None
-
-		if isArray(elem):
-			valor = 'gordo'
-		elif isStruct(elem):
-			valor = armarStruct()
-		else:
-			valor = gd.generarTipoBasico(elem['type'])
-
-		structAsDict[elem['id']] = valor	

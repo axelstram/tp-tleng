@@ -48,8 +48,11 @@ class Main(object):
 		if self.has_duplicated_field_definitions():
 			raise Exception('Hay campos duplicados')
 
-		return self.p[1], self.dependencies
+		return self.p[1]
 
+	def convert_to_json(self):
+		return gd.generate_json(self.evaluate())
+	
 	def create_dependencies_graph(self):
 		for struct in self.p[1]:
 
@@ -72,7 +75,7 @@ class Main(object):
 	def get_elem_type(self, elem):
 		#si es un arreglo o arreglo de arreglos, va iterando hasta el final
 		#para encontrar el tipo
-		while elem['is_array'] == True:
+		while elem['is_array']:
 			elem = elem['type']
 
 		elemType = elem['type']
