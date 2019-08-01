@@ -1,0 +1,4 @@
+type ppal struct { nombre string tipoNuevo1 s1 tipoNuevo2_depende_del1 s2 } 
+
+type s1 struct { numeritos []int } 
+type s2 struct { edad int otroS1 s1 }

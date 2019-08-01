@@ -1,0 +1,5 @@
+type ppal struct { arregloDeStruct []struct { arregloDeInt []int } ejBool bool }
+
+type tipoVacio struct {}
+
+type tipoDefinidoSinUsar struct { nombre string }

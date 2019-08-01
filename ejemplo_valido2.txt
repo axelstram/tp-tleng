@@ -1,1 +1,0 @@
-type menem struct { nombre string sarasa []struct { numeritos []int } }

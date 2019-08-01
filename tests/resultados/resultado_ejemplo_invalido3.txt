@@ -1,0 +1,6 @@
+[Syntax error]
+type:TYPE
+value:TYPE
+line:1
+position:41
+'NoneType' object is not iterable

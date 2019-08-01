@@ -1,0 +1,4 @@
+{'nombre': 'ylgj',
+ 'tipoNuevo1': {'numeritos': [59, 53, 88, 38, 13]},
+ 'tipoNuevo2_depende_del1': {'edad': 96,
+                             'otroS1': {'numeritos': [35, 85, 72, 72, 48]}}}

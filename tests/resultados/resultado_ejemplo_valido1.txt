@@ -1,0 +1,6 @@
+{'activo': False,
+ 'edad': 44,
+ 'nacionalidad': {'codigo': {'prefijo': 'xvrjrzyxc', 'sufijo': 'kjmh'},
+                  'nombre': 'jvmop'},
+ 'nombre': 'ewdveylfui',
+ 'ventas': [86.83, 66.65, 41.84, 36.17, 44.35]}

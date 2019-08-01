@@ -1,0 +1,1 @@
+typ ejInvalido struct { string noDef s1 }
